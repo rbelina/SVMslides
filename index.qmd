@@ -1,0 +1,147 @@
+---
+title: "Support Vector Machines"
+bibliography: references2.bib
+author: "Robert Belina"
+date: '`r Sys.Date()`'
+format: revealjs
+
+---
+
+## Introduction
+
+Support Vector Machines (SVMs) have emerged as a powerful and versatile machine learning algorithm with applications spanning various domains.
+Developed by Vapnik and colleagues in the 1990s, SVMs have gained significant popularity due to their ability to handle both classification and regression tasks effectively.
+The fundamental concept behind SVMs is to find an optimal hyperplane that maximally separates different classes or fits the data points for regression, while simultaneously maintaining a clear margin between them [@kecman_2005_support].
+
+### Brief Introduction to Machine Learning
+
+Machine learning is the process of enabling computers to take actions by providing them with data and allowing them to discover patterns and insights autonomously, without explicit programming.
+
+At the core of machine learning lies the importance of data.
+Just as humans learn through information and data gathering, machines also require data to learn and make informed decisions.
+
+![citation](ml1.png)
+
+SVMs offer several advantages over traditional classification algorithms.
+Unlike methods that solely focus on minimizing training errors, SVMs are designed to maximize the margin between classes.
+This margin not only aids in achieving robust and accurate predictions on unseen data but also enhances the generalization ability of the model.
+By emphasizing the importance of the margin, SVMs can effectively handle datasets with high dimensionality, noise, and outliers, resulting in superior performance in complex scenarios [@tian_2012_recent].
+
+The distinguishing feature of SVMs lies in their ability to transform the original input space into a higher-dimensional feature space through the use of kernel functions.
+This enables SVMs to handle nonlinear relationships between variables without explicitly mapping them into the higher-dimensional space.
+By leveraging the kernel trick, SVMs efficiently capture complex decision boundaries, offering flexibility and adaptability to various data distributions.
+Furthermore, SVMs provide a principled approach to handle both binary and multiclass classification problems.
+Through techniques such as one-vs-one and one-vs-all, SVMs can extend their capabilities to accommodate multiple classes, ensuring accurate predictions across diverse scenarios [@evgenybyvatov_2003_support]
+
+The versatility of SVMs extends beyond classification tasks, as they have also been successfully applied to regression, anomaly detection, and outlier detection problems.
+By employing support vector regression (SVR), SVMs can capture nonlinear relationships in continuous variables, making them well-suited for prediction tasks involving numerical outputs [@brereton_2010_support].
+
+In this review, we aim to provide an in-depth exploration of Support Vector Machines, covering their fundamental concepts, mathematical foundations, training algorithms, and diverse applications across various fields.
+By understanding the underlying principles and techniques of SVMs, researchers and practitioners can effectively leverage thi\$\$s powerful tool to tackle complex classification and regression problems, ultimately leading to enhanced predictive accuracy and insightful data analysis [@yang_2004_biological].
+
+## Methods
+
+To begin understanding the usecases of SVMs we will first look at the underlying math behind SVMs: linear algebra and a touch of optimization theory.
+
+### Definintions
+
+*Length of a Vector*
+
+The norm of a vector x, denoted as \|\|x\|\|, represents its length.
+The Euclidean norm formula used to compute the norm of a vector x = (x1, x2, ..., xn) is as follows:
+
+$$
+||x||= √x21+x22+...+x2n
+$$
+
+*Vector Directions*
+
+The direction of a vector x = (x1, x2) is denoted by w and is defined as follows:
+
+$w = (x1/||x||,x2/||x||)$
+
+Looking at the above, we can view the direction of the vector *w* as:
+
+![citation](ml2.png)
+
+Support Vector Machines (SVMs) are a robust machine learning algorithm used for classification and regression tasks.
+In this section, we describe the key steps involved in implementing SVMs, including data preprocessing, model training, and model evaluation.
+
+Data Preprocessing:
+
+Data Cleaning: Remove any irrelevant or redundant features, handle missing values, and address outliers if necessary.
+Feature Scaling: Normalize the feature values to ensure that they have similar scales.
+Common scaling techniques include standardization (mean centering and scaling to unit variance) or normalization to a specific range.
+Feature Selection: Select relevant features that contribute most to the prediction task, reducing dimensionality and improving model performance.
+Data Split: Divide the dataset into training and testing subsets.
+The training set is used to train the SVM model, while the testing set is used for evaluating its performance.
+Model Training:
+
+Kernel Selection: Determine the appropriate kernel function based on the nature of the data and the problem at hand.
+Common kernel functions include linear, polynomial, Gaussian radial basis function (RBF), and sigmoid.
+Hyperparameter Tuning: Optimize the hyperparameters of the SVM model, such as the regularization parameter C and kernel-specific parameters like the degree of polynomial or the width of the RBF kernel.
+This can be done using techniques like grid search or cross-validation.
+Model Fitting: Train the SVM model using the training dataset and the chosen hyperparameters.
+The goal is to find the optimal hyperplane or decision boundary that maximizes the margin between classes (in the case of classification) or minimizes the error (in the case of regression).
+Model Evaluation:
+
+Classification Metrics: Evaluate the performance of the SVM model for classification tasks using metrics such as accuracy, precision, recall, F1-score, and area under the receiver operating characteristic curve (AUC-ROC).
+Regression Metrics: Assess the performance of the SVM model for regression tasks using metrics such as mean squared error (MSE), root mean squared error (RMSE), mean absolute error (MAE), and R-squared.
+Cross-Validation: Perform k-fold cross-validation to estimate the model's generalization performance.
+This involves dividing the training dataset into k subsets, training the model on k-1 subsets, and evaluating its performance on the remaining subset.
+Repeat this process k times, rotating the evaluation subset each time.
+Model Selection: Compare the performance of different SVM models with varying hyperparameters or kernel functions to select the optimal model with the best performance on the testing dataset.
+Model Deployment:
+
+Once the SVM model has been trained and evaluated, it can be deployed to make predictions on new, unseen data.
+Preprocess the new data using the same steps as the training data (e.g., feature scaling), and apply the trained SVM model to classify or regress the new instances.
+
+## Analysis and Results
+
+### Linear Support Vector Machine Classifier
+
+```{r}
+
+set.seed(19327)
+x = matrix(rnorm(80), 40, 2)
+y = rep(c(-1, 1), c(10, 10))
+x[y == 1,] = x[y == 1,] + 1
+plot(x, col = y + 3, pch = 19)
+
+library(e1071)
+
+dat = data.frame(x, y = as.factor(y))
+svmfit = svm(y ~ ., data = dat, kernel = "linear", cost = 10, scale = FALSE)
+print(svmfit)
+
+plot(svmfit, dat)
+
+make.grid = function(x, n = 105) {
+  grange = apply(x, 2, range)
+  x1 = seq(from = grange[1,1], to = grange[2,1], length = n)
+  x2 = seq(from = grange[1,2], to = grange[2,2], length = n)
+  expand.grid(X1 = x1, X2 = x2)
+}
+
+xgrid = make.grid(x)
+xgrid[1:10,]
+
+ygrid = predict(svmfit, xgrid)
+plot(xgrid, col = c("green","blue")[as.numeric(ygrid)], pch = 20, cex = .2)
+points(x, col = y + 3, pch = 19)
+points(x[svmfit$index,], pch = 5, cex = 2)
+
+beta = drop(t(svmfit$coefs)%*%x[svmfit$index,])
+beta0 = svmfit$rho
+
+plot(xgrid, col = c("green", "blue")[as.numeric(ygrid)], pch = 20, cex = .2)
+points(x, col = y + 3, pch = 19)
+points(x[svmfit$index,], pch = 5, cex = 2)
+abline(beta0 / beta[2], -beta[1] / beta[2])
+abline((beta0 - 1) / beta[2], -beta[1] / beta[2], lty = 2)
+abline((beta0 + 1) / beta[2], -beta[1] / beta[2], lty = 2)
+
+```
+
+
+### Non-Linear Support Vector Machine Classifier
