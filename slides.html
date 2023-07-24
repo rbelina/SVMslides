@@ -9,8 +9,8 @@
 <link href="slides_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.2.313">
 
-  <meta name="author" content="John Doe">
-  <title>Habits</title>
+  <meta name="author" content="Robert Belina">
+  <title>Support Vector Machines</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -324,30 +324,94 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Habits</h1>
+  <h1 class="title">Support Vector Machines</h1>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
 <div class="quarto-title-author-name">
-John Doe 
+Robert Belina 
 </div>
 </div>
 </div>
 
 </section>
-<section id="getting-up" class="slide level2">
-<h2>Getting up</h2>
-<ul>
-<li>Turn off alarm</li>
-<li>Get out of bed</li>
-</ul>
+<section id="introduction" class="slide level2">
+<h2>Introduction</h2>
+<p>Support Vector Machines (SVMs) have emerged as a powerful and versatile machine learning algorithm with applications spanning various domains. Developed by Vapnik and colleagues in the 1990s, SVMs have gained significant popularity due to their ability to handle both classification and regression tasks effectively. The fundamental concept behind SVMs is to find an optimal hyperplane that maximally separates different classes or fits the data points for regression, while simultaneously maintaining a clear margin between them <span class="citation" data-cites="kecman_2005_support">[@kecman_2005_support]</span>.</p>
+<h3 id="brief-introduction-to-machine-learning">Brief Introduction to Machine Learning</h3>
+<p>Machine learning is the process of enabling computers to take actions by providing them with data and allowing them to discover patterns and insights autonomously, without explicit programming.</p>
+<p>At the core of machine learning lies the importance of data. Just as humans learn through information and data gathering, machines also require data to learn and make informed decisions.</p>
+
+<img data-src="ml1.png" class="r-stretch quarto-figure-center"><p class="caption">citation</p><p>SVMs offer several advantages over traditional classification algorithms. Unlike methods that solely focus on minimizing training errors, SVMs are designed to maximize the margin between classes. This margin not only aids in achieving robust and accurate predictions on unseen data but also enhances the generalization ability of the model. By emphasizing the importance of the margin, SVMs can effectively handle datasets with high dimensionality, noise, and outliers, resulting in superior performance in complex scenarios <span class="citation" data-cites="tian_2012_recent">[@tian_2012_recent]</span>.</p>
+<p>The distinguishing feature of SVMs lies in their ability to transform the original input space into a higher-dimensional feature space through the use of kernel functions. This enables SVMs to handle nonlinear relationships between variables without explicitly mapping them into the higher-dimensional space. By leveraging the kernel trick, SVMs efficiently capture complex decision boundaries, offering flexibility and adaptability to various data distributions. Furthermore, SVMs provide a principled approach to handle both binary and multiclass classification problems. Through techniques such as one-vs-one and one-vs-all, SVMs can extend their capabilities to accommodate multiple classes, ensuring accurate predictions across diverse scenarios <span class="citation" data-cites="evgenybyvatov_2003_support">[@evgenybyvatov_2003_support]</span></p>
+<p>The versatility of SVMs extends beyond classification tasks, as they have also been successfully applied to regression, anomaly detection, and outlier detection problems. By employing support vector regression (SVR), SVMs can capture nonlinear relationships in continuous variables, making them well-suited for prediction tasks involving numerical outputs <span class="citation" data-cites="brereton_2010_support">[@brereton_2010_support]</span>.</p>
+<p>In this review, we aim to provide an in-depth exploration of Support Vector Machines, covering their fundamental concepts, mathematical foundations, training algorithms, and diverse applications across various fields. By understanding the underlying principles and techniques of SVMs, researchers and practitioners can effectively leverage thi$$s powerful tool to tackle complex classification and regression problems, ultimately leading to enhanced predictive accuracy and insightful data analysis <span class="citation" data-cites="yang_2004_biological">[@yang_2004_biological]</span>.</p>
 </section>
-<section id="going-to-sleep" class="slide level2">
-<h2>Going to sleep</h2>
-<ul>
-<li>Get in bed</li>
-<li>Count sheep</li>
-</ul>
+<section id="methods" class="slide level2">
+<h2>Methods</h2>
+<p>To begin understanding the usecases of SVMs we will first look at the underlying math behind SVMs: linear algebra and a touch of optimization theory.</p>
+<h3 id="definintions">Definintions</h3>
+<p><em>Length of a Vector</em></p>
+<p>The norm of a vector x, denoted as ||x||, represents its length. The Euclidean norm formula used to compute the norm of a vector x = (x1, x2, …, xn) is as follows:</p>
+<p><span class="math display">\[
+||x||= √x21+x22+...+x2n
+\]</span></p>
+<p><em>Vector Directions</em></p>
+<p>The direction of a vector x = (x1, x2) is denoted by w and is defined as follows:</p>
+<p><span class="math inline">\(w = (x1/||x||,x2/||x||)\)</span></p>
+<p>Looking at the above, we can view the direction of the vector <em>w</em> as:</p>
+
+<img data-src="ml2.png" class="r-stretch quarto-figure-center"><p class="caption">citation</p><p>Support Vector Machines (SVMs) are a robust machine learning algorithm used for classification and regression tasks. In this section, we describe the key steps involved in implementing SVMs, including data preprocessing, model training, and model evaluation.</p>
+<p>Data Preprocessing:</p>
+<p>Data Cleaning: Remove any irrelevant or redundant features, handle missing values, and address outliers if necessary. Feature Scaling: Normalize the feature values to ensure that they have similar scales. Common scaling techniques include standardization (mean centering and scaling to unit variance) or normalization to a specific range. Feature Selection: Select relevant features that contribute most to the prediction task, reducing dimensionality and improving model performance. Data Split: Divide the dataset into training and testing subsets. The training set is used to train the SVM model, while the testing set is used for evaluating its performance. Model Training:</p>
+<p>Kernel Selection: Determine the appropriate kernel function based on the nature of the data and the problem at hand. Common kernel functions include linear, polynomial, Gaussian radial basis function (RBF), and sigmoid. Hyperparameter Tuning: Optimize the hyperparameters of the SVM model, such as the regularization parameter C and kernel-specific parameters like the degree of polynomial or the width of the RBF kernel. This can be done using techniques like grid search or cross-validation. Model Fitting: Train the SVM model using the training dataset and the chosen hyperparameters. The goal is to find the optimal hyperplane or decision boundary that maximizes the margin between classes (in the case of classification) or minimizes the error (in the case of regression). Model Evaluation:</p>
+<p>Classification Metrics: Evaluate the performance of the SVM model for classification tasks using metrics such as accuracy, precision, recall, F1-score, and area under the receiver operating characteristic curve (AUC-ROC). Regression Metrics: Assess the performance of the SVM model for regression tasks using metrics such as mean squared error (MSE), root mean squared error (RMSE), mean absolute error (MAE), and R-squared. Cross-Validation: Perform k-fold cross-validation to estimate the model’s generalization performance. This involves dividing the training dataset into k subsets, training the model on k-1 subsets, and evaluating its performance on the remaining subset. Repeat this process k times, rotating the evaluation subset each time. Model Selection: Compare the performance of different SVM models with varying hyperparameters or kernel functions to select the optimal model with the best performance on the testing dataset. Model Deployment:</p>
+<p>Once the SVM model has been trained and evaluated, it can be deployed to make predictions on new, unseen data. Preprocess the new data using the same steps as the training data (e.g., feature scaling), and apply the trained SVM model to classify or regress the new instances.</p>
+</section>
+<section id="analysis-and-results" class="slide level2">
+<h2>Analysis and Results</h2>
+<h3 id="linear-support-vector-machine-classifier">Linear Support Vector Machine Classifier</h3>
+<div class="cell">
+<div class="cell-output-display">
+<p><img data-src="slides_files/figure-revealjs/unnamed-chunk-1-1.png" width="960"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+svm(formula = y ~ ., data = dat, kernel = "linear", cost = 10, scale = FALSE)
+
+
+Parameters:
+   SVM-Type:  C-classification 
+ SVM-Kernel:  linear 
+       cost:  10 
+
+Number of Support Vectors:  23</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img data-src="slides_files/figure-revealjs/unnamed-chunk-1-2.png" width="960"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          X1        X2
+1  -2.075718 -1.536734
+2  -2.035796 -1.536734
+3  -1.995873 -1.536734
+4  -1.955950 -1.536734
+5  -1.916028 -1.536734
+6  -1.876105 -1.536734
+7  -1.836183 -1.536734
+8  -1.796260 -1.536734
+9  -1.756337 -1.536734
+10 -1.716415 -1.536734</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img data-src="slides_files/figure-revealjs/unnamed-chunk-1-3.png" width="960"></p>
+</div>
+<div class="cell-output-display">
+<p><img data-src="slides_files/figure-revealjs/unnamed-chunk-1-4.png" width="960"></p>
+</div>
+</div>
+<h3 id="non-linear-support-vector-machine-classifier">Non-Linear Support Vector Machine Classifier</h3>
 <div class="footer footer-default">
 
 </div>
@@ -563,6 +627,44 @@ John Doe
         ]
       });
     </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
     <script id="quarto-html-after-body" type="application/javascript">
     window.document.addEventListener("DOMContentLoaded", function (event) {
       const toggleBodyColorMode = (bsSheetEl) => {
